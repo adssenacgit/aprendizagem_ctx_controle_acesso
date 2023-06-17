@@ -34,13 +34,13 @@ func (uc *UserController) Post(c *gin.Context) {
 		panic(err)
 	}
 
-	payload := struct {
-		Token string `json:"token"`
-	}{
-		Token: *token,
-	}
+	// payload := struct {
+	// 	Token string `json:"token"`
+	// }{
+	// 	Token: *token,
+	// }
 
-	c.JSON(200, payload)
+	c.JSON(200, token)
 
 }
 

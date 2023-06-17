@@ -19,6 +19,8 @@ func CreateUrlMappings(DbConn *sql.DB) {
 	{
 		v1.POST("/login", userController.Post)
 		v1.GET("/.well-known/jwks", jwtController.Get)
+		v1.GET("/private/jwk", jwtController.GetPrivate)
+		v1.GET("/keys", jwtController.GetKeys)
 	}
 
 }
