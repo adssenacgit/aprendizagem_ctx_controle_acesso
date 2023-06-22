@@ -7,11 +7,10 @@ import (
 )
 
 func main() {
+
 	config := config.GetConfig()
-	db, err := infrastructure.OpenMysqlConn(config)
-	if err != nil {
-		panic(err)
-	}
-	routes.CreateUrlMappings(db)
-	routes.Router.Run(":8080")
+	infrastructure.OpenMysqlConn(config)
+	infrastructure.Migrate()
+	routes.CreateUrlMappings(infrastructure.DB)
+	routes.Router.Run(config.Port)
 }

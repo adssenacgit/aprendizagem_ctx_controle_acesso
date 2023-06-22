@@ -1,15 +1,14 @@
 package routes
 
 import (
-	"database/sql"
-
 	"github.com/adssenacgit/aprendizagem_ctx_controle_acesso/pkg/controller"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 var Router *gin.Engine
 
-func CreateUrlMappings(DbConn *sql.DB) {
+func CreateUrlMappings(DbConn *gorm.DB) {
 	Router = gin.Default()
 
 	userController := controller.NewUserController()
@@ -18,9 +17,8 @@ func CreateUrlMappings(DbConn *sql.DB) {
 	v1 := Router.Group("/v1")
 	{
 		v1.POST("/login", userController.Post)
-		v1.GET("/.well-known/jwks", jwtController.Get)
-		v1.GET("/private/jwk", jwtController.GetPrivate)
 		v1.GET("/keys", jwtController.GetKeys)
+		v1.GET("/user", userController.Get)
 	}
 
 }

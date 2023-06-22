@@ -5,7 +5,7 @@ import (
 )
 
 type Config struct {
-	Port       int
+	Port       string
 	Timeout    int
 	DBHost     string
 	DBPort     string
@@ -17,12 +17,12 @@ type Config struct {
 
 func GetConfig() Config {
 	return Config{
-		Port:       parseEnvToInt("PORT", "8080"),
+		Port:       GetEnv("PORT", "8080"),
 		Timeout:    parseEnvToInt("TIMEOUT", "30"),
 		DBHost:     GetEnv("DB_HOST", "127.0.0.1"),
 		DBPort:     GetEnv("DB_PORT", "3306"),
-		DBUser:     GetEnv("DB_USER", "postgres"),
-		DBPw:       GetEnv("DB_PASSWORD", "postgres"),
+		DBUser:     GetEnv("DB_USER", "root"),
+		DBPw:       GetEnv("DB_PASSWORD", "root"),
 		DBDatabase: GetEnv("DB_DATABASE", "users"),
 	}
 }

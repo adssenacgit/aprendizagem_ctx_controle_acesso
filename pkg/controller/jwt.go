@@ -12,14 +12,6 @@ func NewJwtController() JwtController {
 	return JwtController{}
 }
 
-func (jc *JwtController) Get(c *gin.Context) {
-	c.JSON(200, jwt.GetJWK())
-}
-
-func (jc *JwtController) GetPrivate(c *gin.Context) {
-	c.JSON(200, jwt.GetPrivateKey())
-}
-
 func (jc *JwtController) GetKeys(c *gin.Context) {
 	c.JSON(200, jwt.GetKeys())
 }

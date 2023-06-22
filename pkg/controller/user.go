@@ -6,6 +6,7 @@ import (
 
 	request "github.com/adssenacgit/aprendizagem_ctx_controle_acesso/pkg/request"
 	response "github.com/adssenacgit/aprendizagem_ctx_controle_acesso/pkg/response"
+	service "github.com/adssenacgit/aprendizagem_ctx_controle_acesso/pkg/service"
 	usecase "github.com/adssenacgit/aprendizagem_ctx_controle_acesso/pkg/usecases"
 	"github.com/gin-gonic/gin"
 )
@@ -18,8 +19,18 @@ func NewUserController() UserController {
 	return UserController{}
 }
 
-func (uc *UserController) Get(w http.ResponseWriter, r *http.Request) {
-	response.StatusMethodNotAllowed(w, r)
+func (uc *UserController) Get(c *gin.Context) {
+	ucService := service.NewUserService()
+	var request struct {
+		Id string
+	}
+	if err := c.BindJSON(&request); err != nil {
+		fmt.Println(err)
+	}
+
+	user := ucService.GetUserById(request.Id)
+
+	c.JSON(200, user)
 
 }
 
@@ -33,12 +44,6 @@ func (uc *UserController) Post(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-
-	// payload := struct {
-	// 	Token string `json:"token"`
-	// }{
-	// 	Token: *token,
-	// }
 
 	c.JSON(200, token)
 

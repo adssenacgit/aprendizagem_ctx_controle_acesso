@@ -1,27 +1,39 @@
 package infrastructure
 
 import (
-	"database/sql"
 	"fmt"
 	"time"
 
 	"github.com/adssenacgit/aprendizagem_ctx_controle_acesso/pkg/config"
-	_ "github.com/go-sql-driver/mysql"
+	entities "github.com/adssenacgit/aprendizagem_ctx_controle_acesso/pkg/entities"
+	"github.com/adssenacgit/aprendizagem_ctx_controle_acesso/pkg/helpers"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/plugin/dbresolver"
 )
 
-func OpenMysqlConn(config config.Config) (*sql.DB, error) {
+var DB *gorm.DB
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", config.DBUser, config.DBPw, config.DBHost, config.DBPort, config.DBDatabase)
+func OpenMysqlConn(config config.Config) {
 
-	db, err := sql.Open("mysql", dsn)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", config.DBUser, config.DBPw, config.DBHost, config.DBPort, config.DBDatabase)
+
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		return nil, err
+		helpers.HandleErr(err)
 	}
 
-	db.SetConnMaxLifetime(time.Minute * 3)
-	db.SetMaxOpenConns(5)
-	db.SetMaxIdleConns(2)
+	db.Use(
+		dbresolver.Register(dbresolver.Config{}).
+			SetConnMaxIdleTime(time.Hour).
+			SetConnMaxLifetime(10 * time.Minute).
+			SetMaxIdleConns(2).
+			SetMaxOpenConns(5),
+	)
 
-	return db, nil
+	DB = db
+}
 
+func Migrate() {
+	DB.AutoMigrate(&entities.User{})
 }
